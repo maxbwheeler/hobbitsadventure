@@ -1,5 +1,61 @@
-task hello {
-	doLast {
-		println 'hello world'
+apply plugin: 'eclipse'
+apply plugin: 'java'
+
+group = 'com.hobbitsadventure'
+version = '1.0'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+[compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:none']
+
+test.systemProperty('java.awt.headless', 'true')
+
+ext {
+	cucumberVersion = '1.0.11'
+	junitVersion = '4.10'
+	springVersion = '3.1.2.RELEASE'
+}
+
+sourceSets {
+	integrationTests {
+		java {
+			srcDir 'src/test-integration/java'
+		}
+		resources {
+			srcDir 'src/test-integration/resources'
+		}
 	}
+	acceptanceTests {
+		java {
+			srcDir 'src/test-acceptance/java'
+		}
+		resources {
+			srcDir 'src/test-acceptance/resources'
+		}
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile(
+		"org.springframework:spring-beans:$springVersion",
+		"org.springframework:spring-context:$springVersion",
+		"org.springframework:spring-context-support:$springVersion",
+		"org.springframework:spring-core:$springVersion",
+	)
+	
+	testCompile(
+		"info.cukes:cucumber-java:$cucumberVersion",
+		"info.cukes:cucumber-junit:$cucumberVersion",
+		"info.cukes:cucumber-spring:$cucumberVersion",
+		"junit:junit:$junitVersion"
+	)
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.1'
 }
