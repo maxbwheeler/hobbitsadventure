@@ -8,9 +8,9 @@ import java.awt.Panel;
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  */
 @SuppressWarnings("serial")
-public class AdventurePanel extends Panel {
+public class CharacterPane extends Panel {
 	
-	public AdventurePanel() {
+	public CharacterPane() {
 		setLayout(new BorderLayout());
 		add(new Label("Adventure Panel"), BorderLayout.NORTH);
 	}
