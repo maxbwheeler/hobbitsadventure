@@ -40,6 +40,9 @@ public class MapReader {
 				case ',':
 					row[i] = GameMap.GRASS;
 					break;
+				case '!':
+					row[i] = GameMap.FOREST;
+					break;
 				case '.':
 					row[i] = GameMap.DESERT;
 					break;
