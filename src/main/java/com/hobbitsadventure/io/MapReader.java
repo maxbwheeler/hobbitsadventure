@@ -46,6 +46,9 @@ public class MapReader {
 				case '.':
 					row[i] = GameMap.DESERT;
 					break;
+				case 'H': 
+	                row[i] = GameMap.HOUSE;
+	                break;
 				default:
 					throw new RuntimeException("Illegal map character: " + ch);	
 				}

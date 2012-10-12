@@ -12,6 +12,7 @@ public class GameMap {
 	public static final int WATER = 5;
 	public static final int MOUNTAIN = 6;
 	public static final int WALL = 7;
+	public static final int HOUSE = 8;
 	
 	private int[][] terrain;
 	

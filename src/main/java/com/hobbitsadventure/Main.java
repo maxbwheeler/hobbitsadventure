@@ -10,7 +10,8 @@ import java.io.IOException;
 import com.hobbitsadventure.io.MapReader;
 import com.hobbitsadventure.model.GameMap;
 import com.hobbitsadventure.ui.CharacterPane;
-import com.hobbitsadventure.ui.GameMapPane;
+import com.hobbitsadventure.ui.CommandPane;
+import com.hobbitsadventure.ui.MapPane;
 
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
@@ -24,7 +25,8 @@ public class Main extends Frame {
 	
 	// UI
 	private CharacterPane characterPane;
-	private GameMapPane mapPane;
+	private MapPane mapPane;
+	private CommandPane commandPane;
 	
 	// Model
 	private GameMap gameMap;
@@ -54,10 +56,12 @@ public class Main extends Frame {
 	
 	private void initComponents() {
 		this.characterPane = new CharacterPane();
-		this.mapPane = new GameMapPane(gameMap);
+		this.mapPane = new MapPane(gameMap);
+		this.commandPane = new CommandPane(mapPane);
 		
 		add(characterPane, BorderLayout.EAST);
 		add(mapPane, BorderLayout.CENTER);
+		add(commandPane, BorderLayout.SOUTH);
 	}
 	
 	private void initListeners() {
