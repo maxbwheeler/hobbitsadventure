@@ -28,14 +28,21 @@ public class TerrainMapReader {
 				char ch = rowStr.charAt(i);
 				switch (ch) {
 				case '.': row[i] = Tiles.BEACH; break;
+				case '$': row[i] = Tiles.CHEST; break;
 				case ':': row[i] = Tiles.BRUSH; break;
 				case '#': row[i] = Tiles.DOCK; break;
+				case '[': row[i] = Tiles.DOOR_CLOSED; break;
+				case '`': row[i] = Tiles.FLOOR_STONE; break;
+				case '\'': row[i] = Tiles.FLOOR_WOOD; break;
 				case '!': row[i] = Tiles.FOREST; break;
 				case ',': row[i] = Tiles.GRASS; break;
 				case '^': row[i] = Tiles.HILL; break;
 				case 'A': row[i] = Tiles.MOUNTAIN; break;
 				case '_': row[i] = Tiles.ROAD; break;
+				case 'D': row[i] = Tiles.STAIRS_DOWN; break;
+				case 'U': row[i] = Tiles.STAIRS_UP; break;
 				case '*': row[i] = Tiles.TOWN; break;
+				case '=': row[i] = Tiles.WALL_TALL; break;
 				case '~': row[i] = Tiles.WATER; break;
 				default:
 					throw new RuntimeException("Illegal map character: " + ch);	

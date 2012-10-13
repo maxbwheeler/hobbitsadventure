@@ -60,6 +60,7 @@ public class Main extends Frame {
 		try {
 			this.mapReader = new TerrainMapReader();
 			this.worldMap = mapReader.read("world");
+//			this.worldMap = mapReader.read("moria/level1");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
