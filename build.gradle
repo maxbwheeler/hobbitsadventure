@@ -12,6 +12,7 @@ targetCompatibility = 1.6
 test.systemProperty('java.awt.headless', 'true')
 
 ext {
+	commonsIoVersion = '2.4'
 	cucumberVersion = '1.0.11'
 	javaxInjectVersion = '1'
 	jlayerVersion = '1.0'
@@ -43,6 +44,7 @@ repositories {
 
 dependencies {
 	compile(
+		"commons-io:commons-io:${commonsIoVersion}",
 		"de.huxhorn.sulky:de.huxhorn.sulky.3rdparty.jlayer:$jlayerVersion"
 	)
 	

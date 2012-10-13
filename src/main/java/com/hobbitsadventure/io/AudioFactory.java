@@ -1,5 +1,7 @@
 package com.hobbitsadventure.io;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -16,6 +18,8 @@ import javax.sound.midi.Sequencer;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
+import org.apache.commons.io.IOUtils;
+
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  */
@@ -24,11 +28,17 @@ public class AudioFactory {
 	
 	private Map<String, Sequence> sequences = new HashMap<String, Sequence>();
 	private ExecutorService executorService;
+	private byte[] clickBytes;
 	
 	public static AudioFactory instance() { return INSTANCE; }
 	
 	private AudioFactory() {
 		this.executorService = Executors.newFixedThreadPool(5);
+		try {
+			this.clickBytes = IOUtils.toByteArray(ClassLoader.getSystemResource("audio/click.mp3"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public void playBackgroundMusic(String id) {
@@ -68,15 +78,13 @@ public class AudioFactory {
 
 			@Override
 			public void run() {
+				ByteArrayInputStream bais = new ByteArrayInputStream(clickBytes);
 				try {
-					InputStream is = ClassLoader.getSystemResourceAsStream("audio/click.mp3");
-					Player player = new Player(is);
-					player.play();
+					new Player(new BufferedInputStream(bais)).play();
 				} catch (JavaLayerException e) {
 					throw new RuntimeException(e);
 				}
 			}
-			
 		});
 	}
 }

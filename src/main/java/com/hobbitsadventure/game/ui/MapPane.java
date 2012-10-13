@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
+import com.hobbitsadventure.game.Config;
 import com.hobbitsadventure.io.AudioFactory;
 import com.hobbitsadventure.io.ImageFactory;
 import com.hobbitsadventure.model.TerrainMap;
@@ -67,7 +68,7 @@ public class MapPane extends Component {
 	private void moveIfPossible(int toRow, int toCol) {
 		Tile[][] terrainMatrix = terrainMap.getTerrain();
 		Tile tile = terrainMatrix[toRow][toCol];
-		boolean traversible = tile.isTraversable();
+		boolean traversible = tile.isTraversable() || Config.GOD_MODE;
 		if (traversible) {
 			this.playerRow = toRow;
 			this.playerCol = toCol;
