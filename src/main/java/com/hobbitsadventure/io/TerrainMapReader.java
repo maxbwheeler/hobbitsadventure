@@ -34,6 +34,7 @@ public class TerrainMapReader {
 				case ',': row[i] = Tiles.GRASS; break;
 				case '^': row[i] = Tiles.HILL; break;
 				case 'A': row[i] = Tiles.MOUNTAIN; break;
+				case '_': row[i] = Tiles.ROAD; break;
 				case '*': row[i] = Tiles.TOWN; break;
 				case '~': row[i] = Tiles.WATER; break;
 				default:
