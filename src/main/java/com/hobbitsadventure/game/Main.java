@@ -1,4 +1,4 @@
-package com.hobbitsadventure;
+package com.hobbitsadventure.game;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -7,21 +7,23 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 
-import com.hobbitsadventure.io.MapReader;
-import com.hobbitsadventure.model.GameMap;
-import com.hobbitsadventure.ui.CharacterPane;
-import com.hobbitsadventure.ui.CommandPane;
-import com.hobbitsadventure.ui.MapPane;
+import com.hobbitsadventure.game.ui.CharacterPane;
+import com.hobbitsadventure.game.ui.CommandPane;
+import com.hobbitsadventure.game.ui.MapPane;
+import com.hobbitsadventure.io.AudioFactory;
+import com.hobbitsadventure.io.TerrainMapReader;
+import com.hobbitsadventure.model.TerrainMap;
 
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  */
 @SuppressWarnings("serial")
 public class Main extends Frame {
-	private static final Dimension SIZE = new Dimension(1024, 800);
+	private static final Dimension SIZE = new Dimension(1200, 1000);
 	
 	// IO
-	private MapReader mapReader;
+	private TerrainMapReader mapReader;
+	private AudioFactory audioFactory;
 	
 	// UI
 	private CharacterPane characterPane;
@@ -29,7 +31,7 @@ public class Main extends Frame {
 	private CommandPane commandPane;
 	
 	// Model
-	private GameMap gameMap;
+	private TerrainMap worldMap;
 	
 	public static void main(String[] args) {
 		new Main();
@@ -37,18 +39,27 @@ public class Main extends Frame {
 	
 	public Main() {
 		super("Hobbit's Adventure");
-		setSize(SIZE);
-		setLayout(new BorderLayout());
+		
+		// Hm, this is really glitchy.
+//		initAudio();
+		
+		initDefaults();
 		initModel();
 		initComponents();
 		initListeners();
 		setVisible(true);
 	}
 	
+	private void initDefaults() {
+		setSize(SIZE);
+		setResizable(false);
+		setLayout(new BorderLayout());
+	}
+	
 	private void initModel() {
 		try {
-			this.mapReader = new MapReader();
-			this.gameMap = mapReader.readGameMap();
+			this.mapReader = new TerrainMapReader();
+			this.worldMap = mapReader.read("world");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -56,7 +67,7 @@ public class Main extends Frame {
 	
 	private void initComponents() {
 		this.characterPane = new CharacterPane();
-		this.mapPane = new MapPane(gameMap);
+		this.mapPane = new MapPane(worldMap);
 		this.commandPane = new CommandPane(mapPane);
 		
 		add(characterPane, BorderLayout.EAST);
@@ -68,5 +79,10 @@ public class Main extends Frame {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) { System.exit(0); }
 		});
+	}
+	
+	private void initAudio() {
+		this.audioFactory = AudioFactory.instance();
+		audioFactory.playBackgroundMusic("ff4fores");
 	}
 }

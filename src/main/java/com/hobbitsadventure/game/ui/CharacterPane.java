@@ -1,4 +1,4 @@
-package com.hobbitsadventure.ui;
+package com.hobbitsadventure.game.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Label;

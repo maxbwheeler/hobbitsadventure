@@ -1,7 +1,7 @@
 apply plugin: 'eclipse'
 apply plugin: 'java'
 
-group = 'com.hobbitsadventure'
+group = 'com.hobbitsadventure.game'
 version = '1.0'
 
 sourceCompatibility = 1.6
@@ -14,8 +14,8 @@ test.systemProperty('java.awt.headless', 'true')
 ext {
 	cucumberVersion = '1.0.11'
 	javaxInjectVersion = '1'
+	jlayerVersion = '1.0'
 	junitVersion = '4.10'
-	springVersion = '3.1.2.RELEASE'
 }
 
 sourceSets {
@@ -43,11 +43,7 @@ repositories {
 
 dependencies {
 	compile(
-		"javax.inject:javax.inject:$javaxInjectVersion",
-		"org.springframework:spring-beans:$springVersion",
-		"org.springframework:spring-context:$springVersion",
-		"org.springframework:spring-context-support:$springVersion",
-		"org.springframework:spring-core:$springVersion",
+		"de.huxhorn.sulky:de.huxhorn.sulky.3rdparty.jlayer:$jlayerVersion"
 	)
 	
 	testCompile(

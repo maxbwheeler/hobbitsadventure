@@ -1,4 +1,4 @@
-package com.hobbitsadventure.ui;
+package com.hobbitsadventure.game.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Panel;
@@ -33,20 +33,16 @@ public class CommandPane extends Panel implements KeyListener {
 		int code = e.getKeyCode();
 		switch (code) {
 		case KeyEvent.VK_UP:
-			System.out.println("up");
-			mapPane.decrI();
+			mapPane.moveNorth();
 			break;
 		case KeyEvent.VK_DOWN:
-			System.out.println("down");
-			mapPane.incrI();
+			mapPane.moveSouth();
 			break;
 		case KeyEvent.VK_LEFT:
-			System.out.println("left");
-			mapPane.decrJ();
+			mapPane.moveWest();
 			break;
 		case KeyEvent.VK_RIGHT:
-			System.out.println("right");
-			mapPane.incrJ();
+			mapPane.moveEast();
 			break;
 		}
 		mapPane.repaint();
