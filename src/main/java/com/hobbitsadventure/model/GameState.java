@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 
 import com.hobbitsadventure.game.Config;
+import com.hobbitsadventure.game.util.CharacterGenerator;
 import com.hobbitsadventure.io.TerrainMapReader;
 
 /**
@@ -12,16 +13,20 @@ import com.hobbitsadventure.io.TerrainMapReader;
  */
 public class GameState {
 	private TerrainMapReader mapReader;
+	private CharacterGenerator characterGenerator;
 	private PropertyChangeSupport propChangeSupport;
 	
 	private TerrainMap terrainMap;
+	private PlayerCharacter pc;
 	private int playerRow;
 	private int playerCol;
 	
 	public GameState() throws IOException {
 		this.mapReader = new TerrainMapReader();
+		this.characterGenerator = new CharacterGenerator();
 		this.propChangeSupport = new PropertyChangeSupport(this);
 		loadTerrainMap("world");
+		this.pc = characterGenerator.generatePlayerCharacter();
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -31,8 +36,6 @@ public class GameState {
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propChangeSupport.removePropertyChangeListener(listener);
 	}
-	
-	public TerrainMap getTerrainMap() { return terrainMap; }
 	
 	public void loadTerrainMap(String id) throws IOException {
 		this.terrainMap = mapReader.read(id);
@@ -44,6 +47,10 @@ public class GameState {
 		// FIXME
 		propChangeSupport.firePropertyChange("terrainMap", null, null);
 	}
+	
+	public TerrainMap getTerrainMap() { return terrainMap; }
+	
+	public PlayerCharacter getPlayerCharacter() { return pc; }
 	
 	public int getPlayerRow() { return playerRow; }
 	

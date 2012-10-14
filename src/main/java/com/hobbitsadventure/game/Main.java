@@ -63,7 +63,7 @@ public class Main extends Frame {
 	}
 	
 	private void initComponents() {
-		this.characterPane = new CharacterPane();
+		this.characterPane = new CharacterPane(gameState);
 		this.mapPane = new MapPane(gameState);
 		this.commandPane = new CommandPane(gameState);
 		

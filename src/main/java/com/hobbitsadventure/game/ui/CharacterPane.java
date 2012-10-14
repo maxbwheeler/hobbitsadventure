@@ -1,17 +1,24 @@
 package com.hobbitsadventure.game.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Label;
 import java.awt.Panel;
+
+import com.hobbitsadventure.model.GameState;
+import com.hobbitsadventure.model.PlayerCharacter;
 
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  */
 @SuppressWarnings("serial")
 public class CharacterPane extends Panel {
+	private GameState gameState;
 	
-	public CharacterPane() {
-		setLayout(new BorderLayout());
-		add(new Label("Adventure Panel"), BorderLayout.NORTH);
+	public CharacterPane(GameState gameState) {
+		this.gameState = gameState;
+		PlayerCharacter pc = gameState.getPlayerCharacter();
+		
+//		add(new Label("Character Panel"));
+		add(new Label("Str: " + pc.getStrength()));
+		add(new Label("Int: " + pc.getIntelligence()));
 	}
 }
