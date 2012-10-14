@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.hobbitsadventure.io.AudioFactory;
 import com.hobbitsadventure.io.ImageFactory;
 import com.hobbitsadventure.model.GameState;
 import com.hobbitsadventure.model.TerrainMap;
@@ -21,12 +22,13 @@ public class MapPane extends Component {
 	private static final int TILE_HEIGHT = 81;
 	private static final int SIGHT_RADIUS = 4;
 	
+	private AudioFactory audioFactory;
+	private PropertyChangeListener propChangeHandler;
+	
 	private GameState gameState;
 	private BufferedImage playerImg;
 	private BufferedImage speechImg;
 	private boolean ouch = false;
-	
-	private PropertyChangeListener propChangeHandler;
 	
 	public MapPane(GameState gameState) {
 		this.gameState = gameState;
@@ -34,6 +36,8 @@ public class MapPane extends Component {
 		ImageFactory imgFactory = new ImageFactory();
 		this.playerImg = imgFactory.getImage("tiles/character_boy");
 		this.speechImg = imgFactory.getImage("tiles/speech_bubble");
+		
+		this.audioFactory = AudioFactory.instance();
 		
 		this.propChangeHandler = new PropertyChangeHandler();
 		gameState.addPropertyChangeListener(propChangeHandler);
@@ -113,8 +117,9 @@ public class MapPane extends Component {
 				Toolkit.getDefaultToolkit().beep();
 			} else {
 				ouch = false;
-				repaint();
+				audioFactory.playClickSound();
 			}
+			repaint();
 		}
 	}
 }
