@@ -21,6 +21,7 @@ public class TerrainMapReader {
 		InputStream is = ClassLoader.getSystemResourceAsStream("maps/" + mapId + ".txt");
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		String rowStr;
+		int lineNum = 1;
 		while ((rowStr = br.readLine()) != null) {
 			int rowLen = rowStr.length();
 			Tile[] row = new Tile[rowLen];
@@ -45,9 +46,11 @@ public class TerrainMapReader {
 				case '=': row[i] = Tiles.WALL_TALL; break;
 				case '~': row[i] = Tiles.WATER; break;
 				default:
-					throw new RuntimeException("Illegal map character: " + ch);	
+					throw new RuntimeException(
+							"Illegal map character at line " + lineNum + ", column " + (i + 1) + ": " + ch);	
 				}
 			}
+			lineNum++;
 			rowList.add(row);
 		}
 		
