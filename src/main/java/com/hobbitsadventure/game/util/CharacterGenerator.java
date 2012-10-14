@@ -13,11 +13,17 @@ public class CharacterGenerator {
 	public PlayerCharacter generatePlayerCharacter() {
 		PlayerCharacter pc = new PlayerCharacter();
 		
+		pc.setLevel(1);
+		pc.setExperience(0);
+		
 		int strength = rollDice();
 		pc.setStrength(strength);
 		
 		int intelligence = rollDice();
 		pc.setIntelligence(intelligence);
+		
+		int health = rollDice();
+		pc.setHealth(health);
 		
 		return pc;
 	}

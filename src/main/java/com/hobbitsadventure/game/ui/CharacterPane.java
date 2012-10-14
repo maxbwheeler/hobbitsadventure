@@ -18,7 +18,10 @@ public class CharacterPane extends Panel {
 		PlayerCharacter pc = gameState.getPlayerCharacter();
 		
 //		add(new Label("Character Panel"));
+		add(new Label("Lev: " + pc.getLevel()));
 		add(new Label("Str: " + pc.getStrength()));
 		add(new Label("Int: " + pc.getIntelligence()));
+		add(new Label("Hea: " + pc.getHealth()));
+		add(new Label("Exp: " + pc.getExperience()));
 	}
 }
