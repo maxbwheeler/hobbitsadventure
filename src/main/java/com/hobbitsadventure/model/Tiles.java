@@ -6,7 +6,7 @@ package com.hobbitsadventure.model;
 public class Tiles {
 	public static final Tile BEACH = new Tile("tiles/dirt_block", null, true, 10);
 	public static final Tile BRUSH = new Tile("tiles/grass_block", "tiles/tree_short", true, 0);
- 	public static final Tile CHEST= new Tile("tiles/plain_block", "tiles/chest_closed", false, 0);
+ 	public static final Tile CHEST = new Tile("tiles/plain_block", "tiles/chest_closed", false, 0);
 	public static final Tile DOCK = new Tile("tiles/wall_block", null, true, -20);
     public static final Tile DOOR_CLOSED = new Tile("tiles/door_tall_closed", null, true, -20);
 	public static final Tile FLOOR_STONE = new Tile("tiles/plain_block", null, true, 0);
