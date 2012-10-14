@@ -4,10 +4,11 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import com.hobbitsadventure.game.Config;
-import com.hobbitsadventure.io.AudioFactory;
 import com.hobbitsadventure.io.ImageFactory;
+import com.hobbitsadventure.model.GameState;
 import com.hobbitsadventure.model.TerrainMap;
 import com.hobbitsadventure.model.Tile;
 
@@ -20,64 +21,22 @@ public class MapPane extends Component {
 	private static final int TILE_HEIGHT = 81;
 	private static final int SIGHT_RADIUS = 4;
 	
-	private TerrainMap terrainMap;
-	private int numRows;
-	private int numCols;
+	private GameState gameState;
 	private BufferedImage playerImg;
 	private BufferedImage speechImg;
 	private boolean ouch = false;
 	
-	/** Player row in world coordinates */
-	private int playerRow = 30;
+	private PropertyChangeListener propChangeHandler;
 	
-	/** Player column in world coordinates */
-	private int playerCol = 30;
-	
-	public MapPane(TerrainMap terrainMap) {
-		this.terrainMap = terrainMap;
-		this.numRows = terrainMap.getNumRows();
-		this.numCols = terrainMap.getNumCols();
+	public MapPane(GameState gameState) {
+		this.gameState = gameState;
 		
 		ImageFactory imgFactory = new ImageFactory();
 		this.playerImg = imgFactory.getImage("tiles/character_boy");
 		this.speechImg = imgFactory.getImage("tiles/speech_bubble");
-	}
-	
-	public void moveNorth() {
-		// http://stackoverflow.com/questions/5385024/mod-in-java-produces-negative-numbers
-		int newPlayerRow = (numRows + playerRow - 1) % numRows;
-		moveIfPossible(newPlayerRow, playerCol);
-	}
-	
-	public void moveSouth() {
-		int newPlayerRow = (playerRow + 1) % numRows;
-		moveIfPossible(newPlayerRow, playerCol);
-	}
-	
-	public void moveEast() {
-		int newPlayerCol = (playerCol + 1) % numCols;
-		moveIfPossible(playerRow, newPlayerCol);
-	}
-	
-	public void moveWest() {
-		// http://stackoverflow.com/questions/5385024/mod-in-java-produces-negative-numbers
-		int newPlayerCol = (numCols + playerCol - 1) % numCols;
-		moveIfPossible(playerRow, newPlayerCol);
-	}
-	
-	private void moveIfPossible(int toRow, int toCol) {
-		Tile[][] terrainMatrix = terrainMap.getTerrain();
-		Tile tile = terrainMatrix[toRow][toCol];
-		boolean traversible = tile.isTraversable() || Config.GOD_MODE;
-		if (traversible) {
-			this.playerRow = toRow;
-			this.playerCol = toCol;
-			AudioFactory.instance().playClickSound();
-		} else {
-			Toolkit.getDefaultToolkit().beep();
-		}
-		ouch = !traversible;
-		repaint();
+		
+		this.propChangeHandler = new PropertyChangeHandler();
+		gameState.addPropertyChangeListener(propChangeHandler);
 	}
 	
 	public void paint(Graphics g) {
@@ -90,8 +49,8 @@ public class MapPane extends Component {
 		paintLayer(g, 1);
 		paintLayer(g, 2);
 		
-		Tile[][] tileMatrix = terrainMap.getTerrain();
-		Tile playerTile = tileMatrix[playerRow][playerCol];
+		Tile[][] tileMatrix = gameState.getTerrainMap().getTerrain();
+		Tile playerTile = tileMatrix[gameState.getPlayerRow()][gameState.getPlayerCol()];
 		
 		// Draw player
 		int x = SIGHT_RADIUS * TILE_WIDTH;
@@ -108,7 +67,13 @@ public class MapPane extends Component {
 	}
 	
 	private void paintLayer(Graphics g, int layer) {
+		TerrainMap terrainMap = gameState.getTerrainMap();
 		Tile[][] tileMatrix = terrainMap.getTerrain();
+		int numRows = terrainMap.getNumRows();
+		int numCols = terrainMap.getNumCols();
+		int playerRow = gameState.getPlayerRow();
+		int playerCol = gameState.getPlayerCol();
+		
 		int minI = playerRow - SIGHT_RADIUS;
 		int maxI = playerRow + SIGHT_RADIUS;
 		int minJ = playerCol - SIGHT_RADIUS;
@@ -134,6 +99,21 @@ public class MapPane extends Component {
 				
 				// Render the tile
 				tile.paint(g, x, y, layer);
+			}
+		}
+	}
+	
+	private class PropertyChangeHandler implements PropertyChangeListener {
+		
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			String propName = event.getPropertyName();
+			if ("ouch".equals(propName)) {
+				ouch = true;
+				Toolkit.getDefaultToolkit().beep();
+			} else {
+				ouch = false;
+				repaint();
 			}
 		}
 	}

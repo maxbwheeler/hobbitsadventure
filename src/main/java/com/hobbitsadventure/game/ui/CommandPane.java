@@ -5,20 +5,20 @@ import java.awt.Panel;
 import java.awt.TextArea;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+
+import com.hobbitsadventure.model.GameState;
 
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  */
 @SuppressWarnings("serial")
 public class CommandPane extends Panel implements KeyListener {
-	private MapPane mapPane;
+	private GameState gameState;
 	private TextArea textArea;
 	
-	// FIXME CommandPane should fire events rather than knowing about MapPane directly. Will take care of that in a bit
-	// but first just want to get the basic behavior working.
-	public CommandPane(MapPane mapPane) {
-		this.mapPane = mapPane;
-		
+	public CommandPane(GameState gameState) {
+		this.gameState = gameState;
 		setLayout(new BorderLayout());
 		this.textArea = new TextArea();
 		add(textArea, BorderLayout.CENTER);
@@ -29,23 +29,35 @@ public class CommandPane extends Panel implements KeyListener {
 	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
 	 */
 	@Override
-	public void keyPressed(KeyEvent e) {
-		int code = e.getKeyCode();
-		switch (code) {
-		case KeyEvent.VK_UP:
-			mapPane.moveNorth();
-			break;
-		case KeyEvent.VK_DOWN:
-			mapPane.moveSouth();
-			break;
-		case KeyEvent.VK_LEFT:
-			mapPane.moveWest();
-			break;
-		case KeyEvent.VK_RIGHT:
-			mapPane.moveEast();
-			break;
+	public void keyPressed(KeyEvent event) {
+		try {
+			int code = event.getKeyCode();
+			switch (code) {
+			case KeyEvent.VK_UP:
+				gameState.moveNorth();
+				break;
+			case KeyEvent.VK_DOWN:
+				gameState.moveSouth();
+				break;
+			case KeyEvent.VK_LEFT:
+				gameState.moveWest();
+				break;
+			case KeyEvent.VK_RIGHT:
+				gameState.moveEast();
+				break;
+			case KeyEvent.VK_0:
+				gameState.loadTerrainMap("world");
+				break;
+			case KeyEvent.VK_1:
+				gameState.loadTerrainMap("moria/level1");
+				break;
+			case KeyEvent.VK_2:
+				gameState.loadTerrainMap("moria/level2");
+				break;
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		mapPane.repaint();
 	}
 
 	/* (non-Javadoc)

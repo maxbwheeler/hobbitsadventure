@@ -11,8 +11,7 @@ import com.hobbitsadventure.game.ui.CharacterPane;
 import com.hobbitsadventure.game.ui.CommandPane;
 import com.hobbitsadventure.game.ui.MapPane;
 import com.hobbitsadventure.io.AudioFactory;
-import com.hobbitsadventure.io.TerrainMapReader;
-import com.hobbitsadventure.model.TerrainMap;
+import com.hobbitsadventure.model.GameState;
 
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
@@ -22,7 +21,6 @@ public class Main extends Frame {
 	private static final Dimension SIZE = new Dimension(1200, 1000);
 	
 	// IO
-	private TerrainMapReader mapReader;
 	private AudioFactory audioFactory;
 	
 	// UI
@@ -31,7 +29,7 @@ public class Main extends Frame {
 	private CommandPane commandPane;
 	
 	// Model
-	private TerrainMap worldMap;
+	private GameState gameState;
 	
 	public static void main(String[] args) {
 		new Main();
@@ -58,8 +56,7 @@ public class Main extends Frame {
 	
 	private void initModel() {
 		try {
-			this.mapReader = new TerrainMapReader();
-			this.worldMap = mapReader.read(Config.MAP);
+			this.gameState = new GameState();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -67,8 +64,8 @@ public class Main extends Frame {
 	
 	private void initComponents() {
 		this.characterPane = new CharacterPane();
-		this.mapPane = new MapPane(worldMap);
-		this.commandPane = new CommandPane(mapPane);
+		this.mapPane = new MapPane(gameState);
+		this.commandPane = new CommandPane(gameState);
 		
 		add(characterPane, BorderLayout.EAST);
 		add(mapPane, BorderLayout.CENTER);
