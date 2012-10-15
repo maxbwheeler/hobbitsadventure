@@ -6,20 +6,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.hobbitsadventure.model.NonPlayerCharacter;
 import com.hobbitsadventure.model.RealmCell;
 import com.hobbitsadventure.model.RealmMap;
 import com.hobbitsadventure.model.Thing;
 import com.hobbitsadventure.model.Tile;
+import com.hobbitsadventure.model.TileClass;
 import com.hobbitsadventure.model.factory.NpcClasses;
 import com.hobbitsadventure.model.factory.Things;
-import com.hobbitsadventure.model.factory.Tiles;
+import com.hobbitsadventure.model.factory.TileClasses;
 
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  */
 public class MapReader {
+	private Random random = new Random();
 	
 	public RealmMap read(String mapId) throws IOException {
 		List<RealmCell[]> rowList = new ArrayList<RealmCell[]>();
@@ -30,78 +33,85 @@ public class MapReader {
 			int numCols = rowStr.length();
 			RealmCell[] row = new RealmCell[numCols];
 			for (int j = 0; j < numCols; j++) {
-				Tile tile = null;
+				TileClass tileClass = null;
 				Thing thing = null;
+				int heightNoise = 0;
 				
 				char ch = rowStr.charAt(j);
 				switch (ch) {
 				case '.':
-					tile = Tiles.BEACH;
+					tileClass = TileClasses.BEACH;
+					heightNoise = random.nextInt(2);
 					break;
 				case '$':
-					tile = Tiles.FLOOR_STONE;
+					tileClass = TileClasses.FLOOR_STONE;
 					thing = Things.CHEST;
 					break;
 				case ':':
-					tile = Tiles.GRASS;
+					tileClass = TileClasses.GRASS;
 					thing = Things.BRUSH;
+					heightNoise = random.nextInt(2);
 					break;
 				case '#':
-					tile = Tiles.WATER;
+					tileClass = TileClasses.WATER;
 					thing = Things.DOCK;
 					break;
 				case '[':
-					tile = Tiles.FLOOR_STONE;
+					tileClass = TileClasses.FLOOR_STONE;
 					thing = Things.DOOR_CLOSED;
 					break;
 				case '`':
-					tile = Tiles.FLOOR_STONE;
+					tileClass = TileClasses.FLOOR_STONE;
 					break;
 				case '\'':
-					tile = Tiles.FLOOR_WOOD;
+					tileClass = TileClasses.FLOOR_WOOD;
 					break;
 				case '!':
-					tile = Tiles.GRASS;
+					tileClass = TileClasses.GRASS;
 					thing = Things.TREE_TALL;
+					heightNoise = random.nextInt(2);
 					break;
 				case ',':
-					tile = Tiles.GRASS;
+					tileClass = TileClasses.GRASS;
+					heightNoise = random.nextInt(2);
 					break;
 				case '^':
-					tile = Tiles.HILL;
+					tileClass = TileClasses.HILL;
+					heightNoise = random.nextInt(2);
 					break;
 				case 'A':
-					tile = Tiles.GRASS;
+					tileClass = TileClasses.GRASS;
 					thing = Things.ROCK;
+					heightNoise = random.nextInt(2);
 					break;
 				case '_':
-					tile = Tiles.ROAD;
+					tileClass = TileClasses.ROAD;
 					break;
 				case 'D':
-					tile = Tiles.STAIRS_DOWN;
+					tileClass = TileClasses.STAIRS_DOWN;
 					break;
 				case 'U':
-					tile = Tiles.STAIRS_UP;
+					tileClass = TileClasses.STAIRS_UP;
 					break;
 				case '*':
-					tile = Tiles.GRASS;
+					tileClass = TileClasses.GRASS;
 					thing = Things.DOOR_CLOSED;
 					break;
 				case '=':
 					// FIXME Need to be able to null this tile instead of rendering two images? Unless the objects are
 					// going to be dynamic (e.g. player can build and/or destroy walls).
-					tile = Tiles.FLOOR_STONE;
+					tileClass = TileClasses.FLOOR_STONE;
 					thing = Things.WALL_TALL;
 					break;
 				case '~':
-					tile = Tiles.WATER;
+					tileClass = TileClasses.WATER;
 					break;
 				default:
 					throw new RuntimeException("Illegal map character: " + ch);	
 				}
 				
 				RealmCell cell = new RealmCell();
-				cell.setTile(tile);
+				cell.setTile(new Tile(tileClass, tileClass.getYOffset() + heightNoise));
 				cell.setThing(thing);
 				row[j] = cell;
 			}
@@ -114,9 +124,17 @@ public class MapReader {
 		RealmMap realmMap = new RealmMap(numRows, numCols);
 		for (int i = 0; i < numRows; i++) {
 			for (int j = 0; j < numCols; j++) {
-				realmMap.setCell(i, j, rowList.get(i)[j]);
+				RealmCell cell = rowList.get(i)[j];
+				realmMap.setCell(i, j, cell);
+				
+				// Add a little more interest to the height map. This is just temporary.
+//				double distance = Math.sqrt(((30 - i) * (30 - i)) + ((30 - j) * (30 - j)));
+//				int offset = (int) Math.min(distance - 20.0, 0) * 5;
+//				Tile tile = cell.getTile();
+//				tile.setHeight(tile.getHeight() + offset);
 			}
 		}
+		
 		
 		// FIXME Not sure we should re-read all the NPCs when reloading the map. Maybe they should have an existence
 		// outside the map. Also the NPCs need to maintain their own positions as well (for movement), and updates need

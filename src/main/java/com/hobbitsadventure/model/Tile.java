@@ -3,30 +3,31 @@ package com.hobbitsadventure.model;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import com.hobbitsadventure.io.ImageFactory;
-
 /**
- * Would be good to make these tiles data-driven instead of hardcoded classes.
- * 
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  */
 public class Tile {
-	private BufferedImage sprite;
-	private boolean traversable;
-	private int yOffset = 0;
+	private TileClass tileClass;
+	private int height;
 	
-	public Tile(String id, boolean traversable, int yOffset) {
-		ImageFactory imgFactory = new ImageFactory();
-		this.sprite = imgFactory.getImage(id);
-		this.traversable = traversable;
-		this.yOffset = yOffset;
+	public Tile(TileClass tileClass, int height) {
+		this.tileClass = tileClass;
+		this.height = height;
 	}
 	
-	public boolean isTraversable() { return traversable; }
+	public TileClass getTileClass() { return tileClass; }
 	
-	public int getYOffset() { return yOffset; }
+	public String getTileClassId() { return tileClass.getId(); }
+	
+	public BufferedImage getSprite() { return tileClass.getSprite(); }
+	
+	public boolean isTraversable() { return tileClass.isTraversable(); }
+	
+	public int getHeight() { return height; }
+	
+	public void setHeight(int height) { this.height = height; }
 	
 	public void paint(Graphics g, int x, int y) {
-		g.drawImage(sprite, x, y - 45 + yOffset, null);
+		g.drawImage(tileClass.getSprite(), x, y - 45 + height, null);
 	}
 }

@@ -48,7 +48,7 @@ public class MapPane extends Component {
 		paintThingsAndCharacters(g);
 		
 //		// Draw player
-//		Tile playerTile = gameState.getTile(gameState.getPlayerRow(), gameState.getPlayerCol());
+//		TileClass playerTile = gameState.getTile(gameState.getPlayerRow(), gameState.getPlayerCol());
 //		int x = SIGHT_RADIUS * TILE_WIDTH;
 //		int y = SIGHT_RADIUS * TILE_HEIGHT;
 //		g.drawImage(playerImg, x, y - 65 + playerTile.getYOffset(), null);
@@ -76,12 +76,21 @@ public class MapPane extends Component {
 		
 		for (int i = minI; i <= maxI; i++) {
 			int rowIndex = (numRows + i) % numRows;
-			int y = (i - minI) * TILE_HEIGHT;
+			int baseY = (i - minI) * TILE_HEIGHT;
 			for (int j = minJ; j <= maxJ; j++) {
 				int colIndex = (numCols + j) % numCols;
+				
+				// Paint tile
 				Tile tile = realmMap.getTile(rowIndex, colIndex);
 				int x = (j - minJ) * TILE_WIDTH;
-				tile.paint(g, x, y);
+				tile.paint(g, x, baseY);
+				
+				// Paint thing if it's occluded by subsequent tile roles
+				Thing thing = realmMap.getThing(rowIndex, colIndex);
+				if (thing != null && thing.isOccludedByTerrain()) {
+					int y = baseY - 65 + tile.getHeight();
+					g.drawImage(thing.getSprite(), x, y, null);
+				}
 			}
 		}
 	}
@@ -105,20 +114,19 @@ public class MapPane extends Component {
 				int colIndex = (numCols + j) % numCols;
 				Tile tile = realmMap.getTile(rowIndex, colIndex);
 				int x = (j - minJ) * TILE_WIDTH;
-				int y = baseY - 65 + tile.getYOffset();
+				int y = baseY - 65 + tile.getHeight();
 				
-				// Paint thing
+				// Paint thing (if we haven't already)
 				Thing thing = realmMap.getThing(rowIndex, colIndex);
-				if (thing != null) {
+				if (thing != null && !thing.isOccludedByTerrain()) {
 					g.drawImage(thing.getSprite(), x, y, null);
 					
-					// Adjust this for the character below
-					y += thing.getYOffset();
 				}
 				
 				// Paint character
 				GameCharacter character = realmMap.getCharacter(rowIndex, colIndex);
 				if (character != null) {
+					if (thing != null) { y += thing.getYOffset(); }
 					g.drawImage(character.getSprite(), x, y, null);
 				}
 			}
