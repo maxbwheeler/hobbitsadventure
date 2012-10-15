@@ -17,7 +17,7 @@ public class CharacterPane extends Panel {
 		this.gameState = gameState;
 		PlayerCharacter pc = gameState.getPlayerCharacter();
 		
-//		add(new Label("Character Panel"));
+//		add(new Label("GameCharacter Panel"));
 		add(new Label("Lev: " + pc.getLevel()));
 		add(new Label("Str: " + pc.getStrength()));
 		add(new Label("Int: " + pc.getIntelligence()));

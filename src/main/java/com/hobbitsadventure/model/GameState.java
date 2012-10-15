@@ -6,27 +6,32 @@ import java.io.IOException;
 
 import com.hobbitsadventure.game.Config;
 import com.hobbitsadventure.game.util.CharacterGenerator;
-import com.hobbitsadventure.io.TerrainMapReader;
+import com.hobbitsadventure.io.MapReader;
 
 /**
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  */
 public class GameState {
-	private TerrainMapReader mapReader;
+	
+	// Dependencies
+	private MapReader mapReader;
 	private CharacterGenerator characterGenerator;
 	private PropertyChangeSupport propChangeSupport;
 	
-	private TerrainMap terrainMap;
+	// Maps
+//	private TerrainMap terrainMap;
+//	private ObjectMap objectMap;
+	private RealmMap realmMap;
+	
+	// Player
 	private PlayerCharacter pc;
-	private int playerRow;
-	private int playerCol;
 	
 	public GameState() throws IOException {
-		this.mapReader = new TerrainMapReader();
+		this.mapReader = new MapReader();
 		this.characterGenerator = new CharacterGenerator();
 		this.propChangeSupport = new PropertyChangeSupport(this);
-		loadTerrainMap("world");
 		this.pc = characterGenerator.generatePlayerCharacter();
+		loadRealmMap("world");
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -37,58 +42,71 @@ public class GameState {
 		propChangeSupport.removePropertyChangeListener(listener);
 	}
 	
-	public void loadTerrainMap(String id) throws IOException {
-		this.terrainMap = mapReader.read(id);
+	public void loadRealmMap(String id) throws IOException {
+		this.realmMap = mapReader.read(id);
 		
 		// FIXME Hardcoded spawn
-		this.playerRow = 30;
-		this.playerCol = 30;
+		pc.setRowIndex(28);
+		pc.setColIndex(30);
+		realmMap.setCharacter(28, 30, pc);
 		
 		// FIXME
 		propChangeSupport.firePropertyChange("terrainMap", null, null);
 	}
 	
-	public TerrainMap getTerrainMap() { return terrainMap; }
+	public RealmMap getRealmMap() { return realmMap; }
 	
 	public PlayerCharacter getPlayerCharacter() { return pc; }
 	
-	public int getPlayerRow() { return playerRow; }
+	public int getPlayerRow() { return pc.getRowIndex(); }
 	
-	public int getPlayerCol() { return playerCol; }
+	public int getPlayerCol() { return pc.getColIndex(); }
 	
 	public void moveNorth() {
 		// http://stackoverflow.com/questions/5385024/mod-in-java-produces-negative-numbers
-		int numRows = getTerrainMap().getNumRows();
-		int newPlayerRow = (numRows + playerRow - 1) % numRows;
-		moveIfPossible(newPlayerRow, playerCol);
+		int numRows = realmMap.getNumRows();
+		int newPlayerRow = (numRows + getPlayerRow() - 1) % numRows;
+		moveIfPossible(newPlayerRow, getPlayerCol());
 	}
 	
 	public void moveSouth() {
-		int numRows = getTerrainMap().getNumRows();
-		int newPlayerRow = (playerRow + 1) % numRows;
-		moveIfPossible(newPlayerRow, playerCol);
+		int numRows = realmMap.getNumRows();
+		int newPlayerRow = (getPlayerRow() + 1) % numRows;
+		moveIfPossible(newPlayerRow, getPlayerCol());
 	}
 	
 	public void moveEast() {
-		int numCols = getTerrainMap().getNumCols();
-		int newPlayerCol = (playerCol + 1) % numCols;
-		moveIfPossible(playerRow, newPlayerCol);
+		int numCols = realmMap.getNumCols();
+		int newPlayerCol = (getPlayerCol() + 1) % numCols;
+		moveIfPossible(getPlayerRow(), newPlayerCol);
 	}
 	
 	public void moveWest() {
 		// http://stackoverflow.com/questions/5385024/mod-in-java-produces-negative-numbers
-		int numCols = getTerrainMap().getNumCols();
-		int newPlayerCol = (numCols + playerCol - 1) % numCols;
-		moveIfPossible(playerRow, newPlayerCol);
+		int numCols = realmMap.getNumCols();
+		int newPlayerCol = (numCols + getPlayerCol() - 1) % numCols;
+		moveIfPossible(getPlayerRow(), newPlayerCol);
 	}
 	
 	private void moveIfPossible(int toRow, int toCol) {
-		Tile[][] terrainMatrix = terrainMap.getTerrain();
-		Tile tile = terrainMatrix[toRow][toCol];
-		boolean traversible = tile.isTraversable() || Config.GOD_MODE;
-		if (traversible) {
-			this.playerRow = toRow;
-			this.playerCol = toCol;
+		Tile tile = realmMap.getTile(toRow, toCol);
+		Thing thing = realmMap.getThing(toRow, toCol);
+		GameCharacter character = realmMap.getCharacter(toRow, toCol);
+		
+		boolean case1 = tile.isTraversable() && (thing == null);
+		
+		// This supports bridges, docks, etc.
+		boolean case2 = (thing != null && thing.isTraversable());
+		
+		boolean charTraversable = (character == null);
+		boolean traversable = ((case1 || case2) && charTraversable) || Config.GOD_MODE;
+		if (traversable) {
+			
+			// FIXME Again need to synchronize the updates here
+			realmMap.setCharacter(pc.getRowIndex(), pc.getColIndex(), null);
+			realmMap.setCharacter(toRow, toCol, pc);
+			pc.setRowIndex(toRow);
+			pc.setColIndex(toCol);
 			
 			// FIXME There's no "position" property yet
 			propChangeSupport.firePropertyChange("position", null, null);

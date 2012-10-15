@@ -9,8 +9,10 @@ import java.beans.PropertyChangeListener;
 
 import com.hobbitsadventure.io.AudioFactory;
 import com.hobbitsadventure.io.ImageFactory;
+import com.hobbitsadventure.model.GameCharacter;
 import com.hobbitsadventure.model.GameState;
-import com.hobbitsadventure.model.TerrainMap;
+import com.hobbitsadventure.model.RealmMap;
+import com.hobbitsadventure.model.Thing;
 import com.hobbitsadventure.model.Tile;
 
 /**
@@ -26,7 +28,6 @@ public class MapPane extends Component {
 	private PropertyChangeListener propChangeHandler;
 	
 	private GameState gameState;
-	private BufferedImage playerImg;
 	private BufferedImage speechImg;
 	private boolean ouch = false;
 	
@@ -34,7 +35,6 @@ public class MapPane extends Component {
 		this.gameState = gameState;
 		
 		ImageFactory imgFactory = new ImageFactory();
-		this.playerImg = imgFactory.getImage("tiles/character_boy");
 		this.speechImg = imgFactory.getImage("tiles/speech_bubble");
 		
 		this.audioFactory = AudioFactory.instance();
@@ -44,37 +44,28 @@ public class MapPane extends Component {
 	}
 	
 	public void paint(Graphics g) {
+		paintTiles(g);
+		paintThingsAndCharacters(g);
 		
-		// FIXME Need to fix the render order. First render the rows above the player (both layers), then render the
-		// player row (first layer), then the player, then the player row (second layer), then the rows below the
-		// player. Something like that.
-		
-		// Paint in layers to get the overlapping right
-		paintLayer(g, 1);
-		paintLayer(g, 2);
-		
-		Tile[][] tileMatrix = gameState.getTerrainMap().getTerrain();
-		Tile playerTile = tileMatrix[gameState.getPlayerRow()][gameState.getPlayerCol()];
-		
-		// Draw player
-		int x = SIGHT_RADIUS * TILE_WIDTH;
-		int y = SIGHT_RADIUS * TILE_HEIGHT;
-		g.drawImage(playerImg, x, y - 65 + playerTile.getYOffset(), null);
-		
-		// Draw ouch
-		if (ouch) {
-			x += TILE_WIDTH;
-			y -= TILE_WIDTH;
-			g.drawImage(speechImg, x, y - 65 + playerTile.getYOffset(), null);
-			g.drawString("Ouch!", x + 35, y + 55 + playerTile.getYOffset());
-		}
+//		// Draw player
+//		Tile playerTile = gameState.getTile(gameState.getPlayerRow(), gameState.getPlayerCol());
+//		int x = SIGHT_RADIUS * TILE_WIDTH;
+//		int y = SIGHT_RADIUS * TILE_HEIGHT;
+//		g.drawImage(playerImg, x, y - 65 + playerTile.getYOffset(), null);
+//		
+//		// Draw ouch
+//		if (ouch) {
+//			x += TILE_WIDTH;
+//			y -= TILE_WIDTH;
+//			g.drawImage(speechImg, x, y - 65 + playerTile.getYOffset(), null);
+//			g.drawString("Ouch!", x + 35, y + 55 + playerTile.getYOffset());
+//		}
 	}
 	
-	private void paintLayer(Graphics g, int layer) {
-		TerrainMap terrainMap = gameState.getTerrainMap();
-		Tile[][] tileMatrix = terrainMap.getTerrain();
-		int numRows = terrainMap.getNumRows();
-		int numCols = terrainMap.getNumCols();
+	private void paintTiles(Graphics g) {
+		RealmMap realmMap = gameState.getRealmMap();
+		int numRows = realmMap.getNumRows();
+		int numCols = realmMap.getNumCols();
 		int playerRow = gameState.getPlayerRow();
 		int playerCol = gameState.getPlayerCol();
 		
@@ -84,25 +75,52 @@ public class MapPane extends Component {
 		int maxJ = playerCol + SIGHT_RADIUS;
 		
 		for (int i = minI; i <= maxI; i++) {
-			
-			// Get the current row of tiles
 			int rowIndex = (numRows + i) % numRows;
-			Tile[] row = tileMatrix[rowIndex];
-			
-			// Get the screen y position
 			int y = (i - minI) * TILE_HEIGHT;
-			
 			for (int j = minJ; j <= maxJ; j++) {
-				
-				// Get the current tile
 				int colIndex = (numCols + j) % numCols;
-				Tile tile = row[colIndex];
-				
-				// Get the screen x position
+				Tile tile = realmMap.getTile(rowIndex, colIndex);
 				int x = (j - minJ) * TILE_WIDTH;
+				tile.paint(g, x, y);
+			}
+		}
+	}
+	
+	private void paintThingsAndCharacters(Graphics g) {
+		RealmMap realmMap = gameState.getRealmMap();
+		int numRows = realmMap.getNumRows();
+		int numCols = realmMap.getNumCols();
+		int playerRow = gameState.getPlayerRow();
+		int playerCol = gameState.getPlayerCol();
+		
+		int minI = playerRow - SIGHT_RADIUS;
+		int maxI = playerRow + SIGHT_RADIUS;
+		int minJ = playerCol - SIGHT_RADIUS;
+		int maxJ = playerCol + SIGHT_RADIUS;
+		
+		for (int i = minI; i <= maxI; i++) {
+			int rowIndex = (numRows + i) % numRows;
+			int baseY = (i - minI) * TILE_HEIGHT;
+			for (int j = minJ; j <= maxJ; j++) {
+				int colIndex = (numCols + j) % numCols;
+				Tile tile = realmMap.getTile(rowIndex, colIndex);
+				int x = (j - minJ) * TILE_WIDTH;
+				int y = baseY - 65 + tile.getYOffset();
 				
-				// Render the tile
-				tile.paint(g, x, y, layer);
+				// Paint thing
+				Thing thing = realmMap.getThing(rowIndex, colIndex);
+				if (thing != null) {
+					g.drawImage(thing.getSprite(), x, y, null);
+					
+					// Adjust this for the character below
+					y += thing.getYOffset();
+				}
+				
+				// Paint character
+				GameCharacter character = realmMap.getCharacter(rowIndex, colIndex);
+				if (character != null) {
+					g.drawImage(character.getSprite(), x, y, null);
+				}
 			}
 		}
 	}
