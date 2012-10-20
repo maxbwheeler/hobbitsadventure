@@ -141,7 +141,7 @@ public class MapReader {
 		// to be synchronized with the object map. Maybe there is a better way to do it but that's what I have in mind
 		// for now.
 		realmMap.setCharacter(30, 25, new NonPlayerCharacter(NpcClasses.BUG));
-		realmMap.setCharacter(29, 28, new NonPlayerCharacter(NpcClasses.PRINCESS));
+		realmMap.setCharacter(28, 22, new NonPlayerCharacter(NpcClasses.PRINCESS));
 		realmMap.setCharacter(10, 10, new NonPlayerCharacter(NpcClasses.CAT_GIRL));
 		realmMap.setCharacter(20, 20, new NonPlayerCharacter(NpcClasses.HORN_GIRL));
 		realmMap.setCharacter(40, 40, new NonPlayerCharacter(NpcClasses.PINK_GIRL));
