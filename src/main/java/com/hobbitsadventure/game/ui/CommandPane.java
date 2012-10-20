@@ -46,13 +46,19 @@ public class CommandPane extends Panel implements KeyListener {
 				gameState.moveEast();
 				break;
 			case KeyEvent.VK_0:
-				gameState.loadRealmMap("world");
+				gameState.loadRealmMap("world1");
 				break;
 			case KeyEvent.VK_1:
-				gameState.loadRealmMap("moria/level1");
+				gameState.loadRealmMap("world2");
 				break;
 			case KeyEvent.VK_2:
+				gameState.loadRealmMap("moria/level1");
+				break;
+			case KeyEvent.VK_3:
 				gameState.loadRealmMap("moria/level2");
+				break;
+			case KeyEvent.VK_4:
+				gameState.loadRealmMap("moria/level3");
 				break;
 			}
 		} catch (IOException e) {

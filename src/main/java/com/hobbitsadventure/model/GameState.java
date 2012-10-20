@@ -31,7 +31,7 @@ public class GameState {
 		this.characterGenerator = new CharacterGenerator();
 		this.propChangeSupport = new PropertyChangeSupport(this);
 		this.pc = characterGenerator.generatePlayerCharacter();
-		loadRealmMap("world");
+		loadRealmMap("world1");
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
