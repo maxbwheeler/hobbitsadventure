@@ -19,8 +19,6 @@ public class GameState {
 	private PropertyChangeSupport propChangeSupport;
 	
 	// Maps
-//	private TerrainMap terrainMap;
-//	private ObjectMap objectMap;
 	private RealmMap realmMap;
 	
 	// Player
