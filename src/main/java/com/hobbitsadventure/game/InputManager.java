@@ -60,6 +60,9 @@ public class InputManager implements KeyListener {
 				case KeyEvent.VK_4:
 					gameState.loadRealmMap("moria/level3");
 					break;
+				case KeyEvent.VK_5:
+					gameState.loadRealmMap("moria/level4");
+					break;
 				case KeyEvent.VK_ESCAPE:
 					main.stop();
 					break;
