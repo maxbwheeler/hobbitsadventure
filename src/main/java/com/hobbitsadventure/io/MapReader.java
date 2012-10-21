@@ -47,6 +47,10 @@ public class MapReader {
 					tileClass = TileClasses.FLOOR_STONE;
 					thing = Things.CHEST;
 					break;
+				case '%':
+					tileClass = TileClasses.FLOOR_STONE;
+					thing = Things.CHEST_OPEN;
+					break;
 				case ':':
 					tileClass = TileClasses.GRASS;
 					thing = Things.BRUSH;

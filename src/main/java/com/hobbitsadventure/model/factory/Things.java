@@ -8,6 +8,7 @@ import com.hobbitsadventure.model.Thing;
 public class Things {
 	public static final Thing BRUSH = new Thing("tiles/tree_short", true, 0, false);
 	public static final Thing CHEST = new Thing("images/objects/chest_closed", false, 0, false);
+	public static final Thing CHEST_OPEN = new Thing("images/objects/chest_open", false, 0, false);
 	public static final Thing DOCK = new Thing("tiles/wall_block", true, -20, true);
 	public static final Thing DOOR_CLOSED = new Thing("images/objects/door_tall_closed", true, 0, false);
 	public static final Thing ROCK = new Thing("images/objects/rock", false, 0, false);
