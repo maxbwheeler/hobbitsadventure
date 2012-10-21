@@ -79,8 +79,8 @@ public class Main {
 		
 		Window window = screenManager.getFullScreenWindow();
 		window.setFont(new Font("Dialog", Font.PLAIN, FONT_SIZE));
-		window.setBackground(Color.BLACK);
-		window.setForeground(Color.WHITE);
+//		window.setBackground(Color.BLACK);
+//		window.setForeground(Color.WHITE);
 		
 		isRunning = true;
 		
@@ -144,6 +144,8 @@ public class Main {
 	}
 	
 	public void draw(Graphics2D g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, screenManager.getWidth(), screenManager.getHeight());
 		paintTiles(g);
 		paintThingsAndCharacters(g);
 	}
