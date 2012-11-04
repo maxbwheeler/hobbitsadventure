@@ -26,9 +26,11 @@ public class Main {
 	private static final int FONT_SIZE = 24;
 	
 	private static final DisplayMode POSSIBLE_MODES[] = {
-//		new DisplayMode(1280, 960, 32, 0),
-//		new DisplayMode(1280, 960, 24, 0),
-//		new DisplayMode(1280, 960, 16, 0),
+		
+		// Hm, on Willie's laptop this is the only one that's working all of the sudden...
+		// Oh, the app works with Java 6, but not Java 7 (even in Java 6 mode).
+//		new DisplayMode(1920, 1200, 24, 0),
+		
 		new DisplayMode(800, 600, 32, 0),
 		new DisplayMode(800, 600, 24, 0),
 		new DisplayMode(800, 600, 16, 0),
@@ -74,22 +76,30 @@ public class Main {
 	public void init() {
 		this.screenManager = new ScreenManager();
 		
+		System.out.println("Setting to full screen");
 		DisplayMode displayMode = screenManager.findFirstCompatibleMode(POSSIBLE_MODES);
+		System.out.println("Got display mode: " + displayMode);
+		
+		if (displayMode == null) {
+			throw new RuntimeException("No valid display mode; exiting");
+		}
+		
 		screenManager.setFullScreen(displayMode);
 		
 		Window window = screenManager.getFullScreenWindow();
-		window.setFont(new Font("Dialog", Font.PLAIN, FONT_SIZE));
-//		window.setBackground(Color.BLACK);
-//		window.setForeground(Color.WHITE);
+		System.out.println("Got window: " + window);
 		
+		System.out.println("Setting input manager");
+		this.inputManager = new InputManager(window, this, gameState);
+		
+		System.out.println("Setting font");
+		window.setFont(new Font("Dialog", Font.PLAIN, FONT_SIZE));
+		
+		initModel();
 		isRunning = true;
 		
 		// Hm, this is really glitchy.
 //		initAudio();
-		
-		initModel();
-		
-		this.inputManager = new InputManager(window, this, gameState);
 	}
 	
 //	private void initAudio() {

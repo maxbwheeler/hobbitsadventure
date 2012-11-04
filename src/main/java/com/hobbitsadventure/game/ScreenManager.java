@@ -27,12 +27,16 @@ public class ScreenManager {
 		return device.getDisplayModes();
 	}
 	
-	public DisplayMode findFirstCompatibleMode(DisplayMode[] modes) {
-		DisplayMode[] goodModes = device.getDisplayModes();
-		for (DisplayMode mode : modes) {
-			for (DisplayMode goodMode : goodModes) {
-				if (displayModesMatch(mode, goodMode)) {
-					return mode;
+	public DisplayMode findFirstCompatibleMode(DisplayMode[] desiredModes) {
+		DisplayMode[] actualModes = device.getDisplayModes();
+		for (DisplayMode desiredMode : desiredModes) {
+			for (DisplayMode actualMode : actualModes) {
+				System.out.println("actualMode.width=" + actualMode.getWidth() +
+						", actualMode.height=" + actualMode.getHeight() +
+						", actualMode.bitDepth=" + actualMode.getBitDepth() +
+						", actualMode.refreshRate=" + actualMode.getRefreshRate());
+				if (displayModesMatch(desiredMode, actualMode)) {
+					return desiredMode;
 				}
 			}
 		}
@@ -69,7 +73,7 @@ public class ScreenManager {
 			try {
 				device.setDisplayMode(displayMode);
 			} catch (IllegalArgumentException e) {
-				// Ignore: illegal mode for this device.
+				throw e;
 			}
 		}
 		frame.createBufferStrategy(2);
