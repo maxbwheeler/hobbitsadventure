@@ -18,6 +18,10 @@ public class InputManager implements KeyListener {
 	private GameState gameState;
 	
 	public InputManager(Component comp, Main main, GameState gameState) {
+		if (gameState == null) {
+			throw new NullPointerException("gameState can't be null");
+		}
+		
 		this.comp = comp;
 		this.main = main;
 		this.gameState = gameState;

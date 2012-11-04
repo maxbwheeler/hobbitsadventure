@@ -89,13 +89,15 @@ public class Main {
 		Window window = screenManager.getFullScreenWindow();
 		System.out.println("Got window: " + window);
 		
+		// Do this before creating the InputManager since we need to initialize the game state.
+		initModel();
+		
 		System.out.println("Setting input manager");
 		this.inputManager = new InputManager(window, this, gameState);
 		
 		System.out.println("Setting font");
 		window.setFont(new Font("Dialog", Font.PLAIN, FONT_SIZE));
 		
-		initModel();
 		isRunning = true;
 		
 		// Hm, this is really glitchy.
