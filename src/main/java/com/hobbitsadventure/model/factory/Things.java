@@ -6,6 +6,7 @@ import com.hobbitsadventure.model.Thing;
  * @author Willie Wheeler (willie.wheeler@gmail.com)
  */
 public class Things {
+	public static final Thing BLUE_GEM = new Thing("images/objects/gem_blue", false, 0, false);
 	public static final Thing BRUSH = new Thing("tiles/tree_short", true, 0, false);
 	public static final Thing CHEST = new Thing("images/objects/chest_closed", false, 0, false);
 	public static final Thing CHEST_OPEN = new Thing("images/objects/chest_open", false, 0, false);

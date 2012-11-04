@@ -45,23 +45,26 @@ public class InputManager implements KeyListener {
 				case KeyEvent.VK_RIGHT:
 					gameState.moveEast();
 					break;
-				case KeyEvent.VK_0:
+				case KeyEvent.VK_A:
 					gameState.loadRealmMap("world1");
 					break;
-				case KeyEvent.VK_1:
+				case KeyEvent.VK_B:
 					gameState.loadRealmMap("world2");
 					break;
-				case KeyEvent.VK_2:
+				case KeyEvent.VK_1:
 					gameState.loadRealmMap("moria/level1");
 					break;
-				case KeyEvent.VK_3:
+				case KeyEvent.VK_2:
 					gameState.loadRealmMap("moria/level2");
 					break;
-				case KeyEvent.VK_4:
+				case KeyEvent.VK_3:
 					gameState.loadRealmMap("moria/level3");
 					break;
-				case KeyEvent.VK_5:
+				case KeyEvent.VK_4:
 					gameState.loadRealmMap("moria/level4");
+					break;
+				case KeyEvent.VK_5:
+					gameState.loadRealmMap("moria/level5");
 					break;
 				case KeyEvent.VK_ESCAPE:
 					main.stop();

@@ -43,6 +43,10 @@ public class MapReader {
 					tileClass = TileClasses.BEACH;
 					heightNoise = random.nextInt(2);
 					break;
+				case '@':
+					tileClass = TileClasses.FLOOR_STONE;
+					thing = Things.BLUE_GEM;
+					break;
 				case '$':
 					tileClass = TileClasses.FLOOR_STONE;
 					thing = Things.CHEST;
