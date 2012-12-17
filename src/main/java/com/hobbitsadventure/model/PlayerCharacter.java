@@ -22,7 +22,7 @@ public class PlayerCharacter implements GameCharacter {
 	
 	public PlayerCharacter() {
 		ImageFactory imgFactory = new ImageFactory();
-		this.sprite = imgFactory.getImage("images/characters/character_boy");
+		this.sprite = imgFactory.getImage("images/characters/character_enderman");
 	}
 	
 	@Override
