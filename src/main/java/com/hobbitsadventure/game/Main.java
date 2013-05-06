@@ -152,7 +152,6 @@ public class Main {
 	 * @param elapsedTime
 	 */
 	public void update(long elapsedTime) {
-		// do nothing
 	}
 	
 	public void draw(Graphics2D g) {
